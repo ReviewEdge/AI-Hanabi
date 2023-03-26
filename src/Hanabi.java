@@ -90,11 +90,11 @@ public class Hanabi {
 
 
 				// my added code:
-				if (chatty) {
-					System.out.println("Player 0 KB:\n" + players.get(0));
-					System.out.println("Player 1 KB: \n" + players.get(1));
-
-				}
+//				if (chatty) {
+//					System.out.println("Player 0 KB:\n" + players.get(0));
+//					System.out.println("Player 1 KB: \n" + players.get(1));
+//
+//				}
 
 
 

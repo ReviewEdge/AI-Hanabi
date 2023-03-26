@@ -22,7 +22,7 @@ public class PartialHand {
     public ArrayList<KBCard> getMyCertainCards() {
         ArrayList<KBCard> certainCards = new ArrayList<KBCard>(5);
         for (Slot sl : slots) {
-            sl.calcBothCertainty();      //TODO: probably a wasteful call
+            sl.calcBothCertainty();
             KBCard get_certain = sl.getCertainCard();
             certainCards.add(get_certain);
         }

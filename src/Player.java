@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
-import java.lang.Math;
 
 /**
  * This is the only class you should edit.
@@ -33,7 +31,7 @@ public class Player {
 	}
 
 	public void firstTimeSeeingPartnerHand(Hand firstPH) throws Exception {
-		partnerHand = new Hand(firstPH);
+		this.partnerHand = new Hand(firstPH);
 
 		// mark all of partner's cards as used
 		for (int i=0; i<firstPH.size(); i++) {
@@ -56,7 +54,11 @@ public class Player {
 
 		}
 		// ^^ vvv  update my KB about what my partner knows
-		whatMyPartnerKnows.takeANumHint(hint, applyingPartHint);
+		if (isColor) {
+			whatMyPartnerKnows.takeAColorHint(hint, applyingPartHint);
+		} else {
+			whatMyPartnerKnows.takeANumHint(hint, applyingPartHint);
+		}
 	}
 
 
@@ -76,7 +78,11 @@ public class Player {
 
 		}
 		// ^^ vvv  update my KB about what my partner knows
-		whatMyPartnerKnows.takeANumHint(hint, applyingPartHint);
+		if (isColor) {
+			whatMyPartnerKnows.takeAColorHint(hint, applyingPartHint);
+		} else {
+			whatMyPartnerKnows.takeANumHint(hint, applyingPartHint);
+		}
 	}
 	
 	/**
@@ -215,9 +221,6 @@ public class Player {
 
 		// see what the legal plays are
 
-//		Integer safeColor = null;
-//		boolean hasSafeColor = true;
-
 		Integer safeValue = null;
 		boolean hasSafeValue = true;
 
@@ -237,7 +240,7 @@ public class Player {
 			}
 		}
 
-		// if you can for certain make a legal play, do it
+		//--------------------- if you can for certain make a legal play, do it ---------------------
 
 		// play at that slot if a certain value is also a safe value, or if a certain card is a legal card
 		int slot_counter = 0;
@@ -268,15 +271,9 @@ public class Player {
 
 
 
-
-
-
-		// make the best hint, if the hint condition is met
+		//--------------------- make the best hint, if the hint condition is met ---------------------
 
 		if (latestBoard.numHints > 0) {
-
-			// TODO: needs to give hinting preference to doubles and triples
-			// todo: should it lock in a close one? (give # then give color to same one?)
 			// do they have a card that is currently playable? give them the first or second hint for it
 			for (int sl = 0; sl < 5; sl++) {
 				if (legalPlays.contains(partnerHand.get(sl))) {
@@ -300,128 +297,11 @@ public class Player {
 
 
 
+		//--------------------- else, discard ---------------------
 
 
-
-//		// make the best hint, if the hint condition is met
-//
-//		if (latestBoard.numHints > 0) {
-//
-//			// TODO: needs to give hinting preference to doubles and triples
-//			// todo: should it lock in a close one? (give # then give color to same one?)
-//			// do they have a card that is currently playable? give them the first or second hint for it
-//
-//			Integer hintSlot = null;
-//			Integer isColor = 0;
-//
-//			//TODO: this makes it suck, just go back to picking the first hit
-//			for (int sl = 0; sl < 5; sl++) {
-//				if (legalPlays.contains(partnerHand.get(sl))) {
-//					Card foundCard = partnerHand.get(sl);
-//
-//					// if they don't know #, hint it
-//					if (whatMyPartnerKnows.slots.get(sl).checkForCertainValue() == null) {
-//						hintSlot = sl;
-//						break;
-//					}
-//
-//					// if they don't know color, hint it
-//					if (whatMyPartnerKnows.slots.get(sl).checkForCertainColor() == null) {
-//						hintSlot = sl;
-//						break;
-//					}
-//
-//					// if they know both, don't do anything
-//				}
-//			}
-//
-//			// if you got a hit..
-//			if (hintSlot != null) {
-//				if (isColor == 0) {
-//					//val
-//					recordHintToPartner(partnerHand.get(hintSlot).value, false, partnerHand);
-//					return "NUMBERHINT " + partnerHand.get(hintSlot).value;
-//				} else {
-//					//color
-//					recordHintToPartner(partnerHand.get(hintSlot).color, true, partnerHand);
-//					return "COLORHINT " + partnerHand.get(hintSlot).color;
-//				}
-//			}
-
-
-
-//			int val_hits_max = 0;
-//			ArrayList<Integer> amtPerVal = new ArrayList<Integer>(Collections.nCopies(6, 0));
-//			int color_hits_max = 0;
-//			ArrayList<Integer> amtPerColor = new ArrayList<Integer>(Collections.nCopies(5, 0));
-//			int best = 0;
-//			Integer hintSlot = null;
-//			//TODO: this sucks for some reason
-//			for (int sl = 0; sl < 5; sl++) {
-//				if (legalPlays.contains(partnerHand.get(sl))) {
-//					Card foundCard = partnerHand.get(sl);
-//
-//					// if they don't know #, hint it
-//					if (whatMyPartnerKnows.slots.get(sl).checkForCertainValue() == null) {
-//						int putting = amtPerVal.get(foundCard.value)+1;
-//
-//						if (putting > val_hits_max) {
-//							val_hits_max = putting;
-//						}
-//
-//						amtPerVal.set(foundCard.value, putting);
-//
-//						if (Math.max(val_hits_max, color_hits_max) == val_hits_max) {
-//							best = 0;
-//							hintSlot = sl;
-//						}
-//					}
-//
-//					// if they don't know color, hint it
-//					if (whatMyPartnerKnows.slots.get(sl).checkForCertainColor() == null) {
-//						int putting = amtPerColor.get(foundCard.color)+1;
-//
-//						if (putting > color_hits_max) {
-//							color_hits_max = putting;
-//						}
-//
-//						amtPerColor.set(foundCard.value, putting);
-//
-//						if (Math.max(val_hits_max, color_hits_max) == color_hits_max) {
-//							best = 1;
-//							hintSlot = sl;
-//						}
-//					}
-//
-//					// if they know both, don't do anything
-//				}
-//			}
-//
-//			// if you got a hit..
-//			if (hintSlot != null) {
-//				if (best == 0) {
-//					//val
-//					recordHintToPartner(partnerHand.get(hintSlot).value, false, partnerHand);
-//					return "NUMBERHINT " + partnerHand.get(hintSlot).value;
-//				} else {
-//					//color
-//					recordHintToPartner(partnerHand.get(hintSlot).color, true, partnerHand);
-//					return "COLORHINT " + partnerHand.get(hintSlot).color;
-//				}
-//			}
-
-
-
-
-
-
-
-		// else, discard
-
-
-		//defaults to dumping first card
+		// defaults to dumping first card
 		String discard_statement = "DISCARD 0 0";
-
 
 		// discard certain-cards lower than played lowest of that color
 		ArrayList<KBCard> partner_certain = myHand.getMyCertainCards();
@@ -437,32 +317,7 @@ public class Player {
 		}
 
 
-		// discard highest certain val greater than 3, if there is one
-		Integer max_certain_val = null;
-		Integer kill_slot = null;
-		for (int sl = 0; sl < 5; sl++) {
-			// if you actually have something, AND it's a 4 or 5... maybe 3 in the future?
-			Integer check_certain_val = myHand.slots.get(sl).checkForCertainValue();
-			if (check_certain_val != null) {
-				if (max_certain_val == null) {
-					max_certain_val = check_certain_val;
-					kill_slot = sl;
-				} else if (check_certain_val > max_certain_val) {
-					max_certain_val = check_certain_val;
-					kill_slot = sl;
-				}
-			}
-		}
-
-		if (max_certain_val != null) {
-			if (max_certain_val > 3) {
-				myHand.slots.get(kill_slot).lostHints();
-				return "DISCARD " + kill_slot + " " + kill_slot;
-			}
-		}
-
-
-		// discard slot with least data (no hints)
+//		discard slot with least data (no hints)
 		for (int sl = 0; sl < 5; sl++) {
 			if((myHand.slots.get(sl).getNumHint() == null) && (myHand.slots.get(sl).getColorHint() == null)) {
 				myHand.slots.get(sl).lostHints();
@@ -470,29 +325,63 @@ public class Player {
 			}
 		}
 
+		// if you have hints left...
+		// Checks for helpful hints again, this time it's more lenient because it has no good cards to discard
+		// increases average score by about .3 (hints threshold > 1)
 
-		//TODO: if you have a lot of hints left, you should probably throw out a few hints here
-		/***
-		if (boardState.numHints > 2) {
-			partnerHand();
-			// try to find hints that will give a lot of info!!
+		if (latestBoard.numHints > 1) {
+
+			// increments the legal hint card by 1
+			for (int i = 0; i < legalPlays.size(); i++) {
+				KBCard oldCard = new KBCard(legalPlays.get(i));
+				legalPlays.set(i, new KBCard(oldCard.value+1, oldCard.color));
+			}
+
+			// do they have a card that is currently playable? give them the first or second hint for it
+			for (int sl = 0; sl < 5; sl++) {
+				if (legalPlays.contains(partnerHand.get(sl))) {
+					// if they don't know #, hint it
+					if (whatMyPartnerKnows.slots.get(sl).checkForCertainValue() == null) {
+						recordHintToPartner(partnerHand.get(sl).value, false, partnerHand);
+						return "NUMBERHINT " + partnerHand.get(sl).value;
+					}
+
+					// if they don't know color, hint it
+					if (whatMyPartnerKnows.slots.get(sl).checkForCertainColor() == null) {
+						recordHintToPartner(partnerHand.get(sl).color, true, partnerHand);
+						return "COLORHINT " + partnerHand.get(sl).color;
+					}
+
+					// if they know both, don't do anything
+				}
+			}
+
+		} // end hints-2 block
+
+
+		// If you have some fuses to risk, make a guess play
+		// (increases average score by about .25)
+		if (latestBoard.numFuses > 0) {
+			// play best card (any card with a hint)
+			for (int sl = 0; sl < 5; sl++) {
+				// if you have a card that you know the value, play it
+				if(myHand.slots.get(sl).getCertainValue() != null) {
+					// remove hints for that slot
+					myHand.slots.get(sl).lostHints();
+					return "PLAY " + sl + " " + sl;
+				}
+			}
 		}
-		***/
-		//TODO: if the game's about to end (from discarding) and you have fuses, throw out your best guesses as plays
 
-		// dump the first slot
+
+		// if there are no good moves, dump the first slot
 		myHand.slots.get(0).lostHints();
 		return discard_statement;
-
-		// Provided for testing purposes only; delete.
-		// Your method should construct and return a String without user input.
-//		return scn.nextLine();
 	}
 
 
 	@Override
 	public String toString() {
-		return "MEEE" + myHand.toString();
+		return "Me: " + myHand.toString();
 	}
-
 }
